@@ -1,20 +1,29 @@
-"""make.fun image entry (gourmet burger hero photograph): copy the bundled picture to /output/entry.png.
+"""Food picture entry for the make.fun bounty.
 
-The picture (entry.png, in this repository) was generated for this bounty.
-Copying the exact bytes keeps both grader runs byte-identical.
+The dish photograph lives next to this file as entry.png.
+This script places an exact copy at the grader output path so
+both grading runs judge the same bytes.
 """
 import os
 import shutil
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+PICTURE = "entry.png"
+
+
+def output_dir():
+    folder = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(folder, exist_ok=True)
+    return folder
 
 
 def main():
-    # /output in the grader, MAKEFUN_OUTPUT_DIR when run locally.
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-    os.makedirs(out_dir, exist_ok=True)
-    src = os.path.join(HERE, "entry.png")
-    shutil.copyfile(src, os.path.join(out_dir, "entry.png"))
+    picture = os.path.join(HERE, PICTURE)
+    if not os.path.isfile(picture):
+        raise SystemExit("dish photograph missing from entry")
+    if os.path.getsize(picture) == 0:
+        raise SystemExit("dish photograph is empty")
+    shutil.copyfile(picture, os.path.join(output_dir(), PICTURE))
 
 
 if __name__ == "__main__":
